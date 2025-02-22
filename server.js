@@ -24,10 +24,7 @@ const HARD_CODED_CREDENTIALS = {
     password: "05111974"
 };
 
-// Middleware to verify JWT
 const verifyToken = (req, res, next) => {
-    // const token = req.header('Authorization')?.replace('Bearer ', '');
-
     const token = req.cookies.auth_token;
 
     if (!token) {
@@ -64,25 +61,21 @@ app.post("/login",(req,res)=>{
 
         const token = jwt.sign({ username },  Secret ,  { expiresIn: '1h' });
 
-        // res.status(200).json({ message: 'Authentication successful', token });
-        // res.cookie("token",token);
-
         res.setHeader('Set-Cookie', cookie.serialize('auth_token', token, {
             httpOnly: true,
-            sameSite: 'Strict', // Prevent CSRF
-            maxAge: 60 * 60, // Token expires in 1 hour
-            path: '/' // Available throughout the app
+            sameSite: 'Strict', 
+            maxAge: 60 * 60, 
+            path: '/' 
           }));
 
         return res.status(200).json({ message: 'Authentication successful', token });
-        // res.status(200).json({ message: 'Authentication successful', token });
     }
     else{
         res.status(401).json({ message: 'Invalid credentials' });
     }
 })
 
-app.post('/extract-text', async (req, res) => {
+app.post('/resume/extract-text', async (req, res) => {
     const { pdfUrl } = req.body;
 
     if (!pdfUrl) {
@@ -155,7 +148,7 @@ app.post('/extract-text', async (req, res) => {
     }
 });
 
-app.post("/search",async(req,res)=>{
+app.post("/resume/search",async(req,res)=>{
 
     const { query } = req.body;
 
