@@ -11,8 +11,6 @@ require('dotenv').config();
 
 const PORT = 5000;
 
-const Secret = "jhadvsuykasgfuywgaekufya";
-
 app.use(bodyParser.json());
 
 app.get("/",(req,res)=>{
@@ -32,7 +30,7 @@ const verifyToken = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, SECRET_KEY);
+        const decoded = jwt.verify(token, process.env.Secret);
         req.user = decoded;
         next();
     } catch (err) {
@@ -59,7 +57,7 @@ app.post("/login",(req,res)=>{
 
     if( username === HARD_CODED_CREDENTIALS.username && password === HARD_CODED_CREDENTIALS.password ){
 
-        const token = jwt.sign({ username },  Secret ,  { expiresIn: '1h' });
+        const token = jwt.sign({ username },  process.env.Secret ,  { expiresIn: '1h' });
 
         res.setHeader('Set-Cookie', cookie.serialize('auth_token', token, {
             httpOnly: true,
