@@ -38,16 +38,12 @@ const verifyToken = (req, res, next) => {
     }
 };
 
-app.get('/protected', verifyToken, (req, res) => {
-    res.json({ message: 'This is a protected route!', user: req.user });
-});
-
 async function extractTextFromPdf(pdfBuffer) {
     try {
         const data = await pdfParse(pdfBuffer);
         return data.text;
     } catch (err) {
-        throw new Error('Error extracting text from PDF: ' + err.message);
+        throw new Error('Error extracting text from PDF: ');
     }
 }
 
