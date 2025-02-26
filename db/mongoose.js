@@ -1,55 +1,28 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 
-mongoose.connect("mongodb://localhost:27017/neoBuild").then(()=>{
+mongoose.connect(process.env.DB_URL).then(()=>{
     console.log("db connected");
 });
 
-const experienceSchema = new mongoose.Schema({
-    job_title: {
-        type: String
-    },
-    company:{
-        type: String
-    },
-    start_date:{
-        type: String
-    },
-    end_date:{
-        type: String
-    }
-})
-
-const educationSchema = new mongoose.Schema({
-        degree:{
-            type: String
-        },
-        branch:{
-            type: String
-        },
-        institution:{
-            type: String
-        },
-        year:{
-            type: String
-        }
-})
-
-const TextSchema = new mongoose.Schema({
-    name:{
+const userSchema = new mongoose.Schema({
+    username:{
         type: String,
         required: true
     },
-    email:
-    [{
+    email: {
         type: String,
         required: true
-    }],
-    education: [educationSchema],
-    experience: [experienceSchema],
-    summary: String,
-    skills:[String]
+    },
+    password :{
+        type: String,
+        required: true
+    },
+    referralCode: { type: String, unique: true }, 
+    referredBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    referrals: { type: Number, default: 0 }
 })
 
-const text = mongoose.model("text", TextSchema);
+const User = mongoose.model("User", userSchema);
 
-module.exports = text;
+module.exports = User;
